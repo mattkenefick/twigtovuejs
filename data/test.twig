@@ -1,0 +1,9 @@
+<div class="page-explore-index container">
+    {% if collection.item(0, startIndex) %}
+        {% include "Web/" ~ "View/News/ThumbnailLink/ThumbnailLink.twig" with {
+            type: "style-04",
+            model: collection.item(0, 0),
+            label: collection.item(0).getLabelFromSubtype(),
+        } %}
+    {% endif %}
+</div>

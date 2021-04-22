@@ -1,0 +1,80 @@
+<main>
+    <header>
+        <!-- Namespaced include -->
+        {% include 'view/' ~ 'header/main.twig' with {
+            title: "My Header Title"
+        } %}
+    </header>
+
+    <div>
+        {% if foo and bar %}
+            <h1>Something &copy; </h1>
+        {% endif %}
+
+        <!-- @todo -->
+        <!-- In terms of XmlToVue, I think the subsequent A is being wrapped in an <include> tag -->
+        {% include 'web/' ~ 'view/film/index/index.twig' with {
+            films: []
+        } %}
+
+        <a href="https://www.example.com/image.jpg?foo=bar&amp;param=argument">
+            URL with ampersand params
+        </a>
+    </div>
+
+    <ul>
+        {% for model in collection %}
+        <li>
+            {{ model.title }}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div>
+        {# Test Comment #}
+        <p>{{ variable }}</p>
+
+        {{ foo('bar') }}
+    </div>
+
+    <div>
+        {% for model in collection %}
+        <div class="second-loop">
+            {% if model.title %}
+            <div class="conditional">
+                {{ model.title }}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <footer>
+        {% include 'view/footer/main.twig' with {
+            title: "My Header Title",
+            foo: model.getTitle(),
+        } %}
+    </footer>
+
+
+    {% include "Web/" ~ "View/Component/ThumbnailLink/ThumbnailLink.twig" with {
+        type: type,
+        image: {
+            src: model.media.getThumbnailUrl(),
+        },
+        defaultImage: {
+            src: imageUrl('/generic/content-thumbnail.svg'),
+        },
+        link: {
+            href: model.getUrl(),
+            title: model.getTitle(),
+        },
+        title: model.getTitle(),
+        meta: [
+            {
+                class: "date",
+                value: "Apr 23, 2020",
+            },
+        ],
+    } %}
+</main>
