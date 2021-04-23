@@ -10,12 +10,9 @@
  */
 
 import entities from 'html-entities';
-import fs from 'fs';
 
 import preg_replace from './polyfill/preg_replace.js';
 
-// const libxmljs = require('libxmljs');
-// const xmlParser = require('fast-xml-parser');
 import QueryPath from './util/query-path.js';
 
 import Parser from './parser.js';
@@ -45,44 +42,25 @@ import XmlToVueConvertLoops from './convert/xmltovue/convert-loops.js';
  */
 export default class Converter
 {
-    /**
-     * HTML
-     *
-     * @var string
-     */
-    $html;
-
-    /**
-     * QueryPath / DOMParser
-     *
-     * @var QueryPath
-     */
-    $qp;
-
-    /**
-     * XML
-     *
-     * @var XMLElement
-     */
-    $xml;
-
-    /**
-     * HTML tags
-     *
-     * Value can have `tag` to return or
-     * we can `convert` it to something else
-     *
-     * @var array
-     */
-    $tags = {
-        'for'     : TwigToXmlConvertFor,
-        'endfor'  : TwigToXmlConvertFor,
-        'include' : TwigToXmlConvertInclude,
-        'if'      : TwigToXmlConvertIf,
-        'elseif'  : TwigToXmlConvertIf,
-        'else'    : TwigToXmlConvertIf,
-        'endif'   : TwigToXmlConvertIf,
-    };
+    constructor() {
+        /**
+         * HTML tags
+         *
+         * Value can have `tag` to return or
+         * we can `convert` it to something else
+         *
+         * @var array
+         */
+        this.$tags = {
+            'for'     : TwigToXmlConvertFor,
+            'endfor'  : TwigToXmlConvertFor,
+            'include' : TwigToXmlConvertInclude,
+            'if'      : TwigToXmlConvertIf,
+            'elseif'  : TwigToXmlConvertIf,
+            'else'    : TwigToXmlConvertIf,
+            'endif'   : TwigToXmlConvertIf,
+        };
+    }
 
     /**
      * Converts a Twig file to VueJS based on filepath or template

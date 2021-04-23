@@ -7,11 +7,7 @@ import preg_replace_callback from '../../polyfill/preg_replace_callback.js';
 import dJSON from 'dirty-json';
 import StringUtility from '../../util/string.js';
 
-/**
- * Converter
- */
-export default class ConvertInclude
-{
+const staticObject = {
     /**
      * Prevents us from creating attributes for object references
      * and only allows literal values, like :property="'String'"
@@ -22,8 +18,14 @@ export default class ConvertInclude
      *
      * @var boolean
      */
-    static $onlyLiteralAttributes = false;
+    $onlyLiteralAttributes: false,
+}
 
+/**
+ * Converter
+ */
+export default class ConvertInclude
+{
     /**
      * Convert
      *

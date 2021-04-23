@@ -9,6 +9,28 @@
  * @license http://opensource.org/licenses/MIT MIT
  */
 
+const staticObject = {
+    /**
+     * HTML tags
+     *
+     * Value can have `tag` to return or
+     * we can `convert` it to something else
+     *
+     * @var array
+     */
+    $tags: {
+        'for '     : { 'tag' : 'for' },
+        'endfor'   : { 'tag' : 'endfor' },
+        'include ' : { 'tag' : 'include' },
+        'if '      : { 'tag' : 'if' },
+        'elseif '  : { 'tag' : 'elseif' },
+        'else if ' : { 'tag' : 'elseif' },
+        'else-if ' : { 'tag' : 'elseif' },
+        'else'     : { 'tag' : 'else' },
+        'endif'    : { 'tag' : 'endif' },
+    }
+}
+
 /**
  * TagIdentifier
  *
@@ -26,26 +48,6 @@
 export default class TagIdentifier
 {
     /**
-     * HTML tags
-     *
-     * Value can have `tag` to return or
-     * we can `convert` it to something else
-     *
-     * @var array
-     */
-    static $tags = {
-        'for '     : { 'tag' : 'for' },
-        'endfor'   : { 'tag' : 'endfor' },
-        'include ' : { 'tag' : 'include' },
-        'if '      : { 'tag' : 'if' },
-        'elseif '  : { 'tag' : 'elseif' },
-        'else if ' : { 'tag' : 'elseif' },
-        'else-if ' : { 'tag' : 'elseif' },
-        'else'     : { 'tag' : 'else' },
-        'endif'    : { 'tag' : 'endif' },
-    };
-
-    /**
      * Try to identify tags
      *
      * The grabbed value is a section, like an innerValue,
@@ -62,8 +64,8 @@ export default class TagIdentifier
         // Clean
         $value = TagIdentifier.fixString($value);
 
-        for ($key in TagIdentifier.$tags) {
-            $options = TagIdentifier.$tags[$key];
+        for ($key in staticObject.$tags) {
+            $options = staticObject.$tags[$key];
             $possibleKey = $value.substr(0, $key.length);
 
             if ($possibleKey === $key) {

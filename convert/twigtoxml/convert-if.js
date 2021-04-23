@@ -3,24 +3,27 @@ import preg_quote from '../../polyfill/preg_quote.js';
 import preg_replace from '../../polyfill/preg_replace.js';
 
 /**
+ * JS imports are yelling about using these as static variables
+ * on the class due to loaders. So we moved it out.
+ *
+ * ERROR in ./node_modules/twigtovuejs/convert/twigtoxml/convert-if.js 15:18
+ * Module parse failed: Unexpected token (15:18)
+ * You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
+ * |      * @var int
+ * |      *
+ * >     static $depth = 0;
+ *
+ */
+const staticObject = {
+    $depth: 0,
+    $tagHistory: [],
+}
+
+/**
  * Converter
  */
 export default class ConvertIf
 {
-    /**
-     * Depth
-     *
-     * @var int
-     */
-    static $depth = 0;
-
-    /**
-     * Previous tags
-     *
-     * @var array
-     */
-    static $tagHistory = [];
-
     /**
      * Convert
      *
@@ -63,14 +66,14 @@ export default class ConvertIf
         let $previousTag, $value;
 
         // $previousTag = ConvertIf.getPreviousTag();
-        $previousTag = ConvertIf.$tagHistory[ConvertIf.$tagHistory.length - 1] != 'if'
+        $previousTag = staticObject.$tagHistory[staticObject.$tagHistory.length - 1] != 'if'
             ? ConvertIf.getPreviousTag()
             : '';
         $attributeValue = ConvertIf.cleanAttributes($attributeValue);
         $value = ConvertIf.str_replace_first($outerValue, $previousTag + '<if condition="' + $attributeValue + '">', $str);
 
         // increase depth
-        ConvertIf.$depth++;
+        staticObject.$depth++;
 
         // add conditional to history
         ConvertIf.addPreviousTag('if');
@@ -161,7 +164,7 @@ export default class ConvertIf
         // }
 
         // decrease depth
-        ConvertIf.$depth--;
+        staticObject.$depth--;
 
         // Unset previous tag because block is closed
         // ConvertIf.$previousTag = null;
@@ -194,8 +197,8 @@ export default class ConvertIf
      */
     static addPreviousTag($tag)
     {
-        // echo ' o tag = ' + $tag + "   (" + implode(', ', ConvertIf.$tagHistory) + ") \n";
-        ConvertIf.$tagHistory.push($tag);
+        // echo ' o tag = ' + $tag + "   (" + implode(', ', staticObject.$tagHistory) + ") \n";
+        staticObject.$tagHistory.push($tag);
     }
 
     /**
@@ -207,9 +210,9 @@ export default class ConvertIf
     {
         let $tag;
 
-        if (ConvertIf.$tagHistory.length) {
-            // echo ' x ' + (end(ConvertIf.$tagHistory)) + "   {" + implode(', ', ConvertIf.$tagHistory) + "} \n";
-            $tag = ConvertIf.$tagHistory.pop();
+        if (staticObject.$tagHistory.length) {
+            // echo ' x ' + (end(staticObject.$tagHistory)) + "   {" + implode(', ', staticObject.$tagHistory) + "} \n";
+            $tag = staticObject.$tagHistory.pop();
             return '</' + $tag + '>';
         }
 

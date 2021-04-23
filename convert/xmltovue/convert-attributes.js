@@ -1,6 +1,25 @@
 
 import QueryPath from '../../util/query-path.js';
 
+const staticObject = {
+    /**
+     * Attributes we'll convert
+     *
+     * @todo Why don't we convert all attributes that have tags?
+     *  I'm guessing because it's easier to NOT do it with query path?
+     *
+     * @var array
+     */
+    $attributesHtml: [
+        'class',
+        'href',
+        'id',
+        'style',
+        'title',
+    ]
+}
+
+
 /**
  * Converter
  *
@@ -15,22 +34,6 @@ import QueryPath from '../../util/query-path.js';
  */
 export default class ConvertAttributes
 {
-    /**
-     * Attributes we'll convert
-     *
-     * @todo Why don't we convert all attributes that have tags?
-     *  I'm guessing because it's easier to NOT do it with query path?
-     *
-     * @var array
-     */
-    static $attributesHtml = [
-        'class',
-        'href',
-        'id',
-        'style',
-        'title',
-    ];
-
     /**
      * Convert
      *
@@ -119,7 +122,7 @@ export default class ConvertAttributes
             });
         }
         else {
-            return ConvertAttributes.$attributesHtml;
+            return staticObject.$attributesHtml;
         }
     }
 }

@@ -9,7 +9,6 @@
  * @license http://opensource.org/licenses/MIT MIT
  */
 
-import fs from 'fs';
 import preg_match_all from './polyfill/preg_match_all.js';
 
 /**
@@ -24,34 +23,6 @@ import preg_match_all from './polyfill/preg_match_all.js';
  */
 export default class Parser
 {
-    /**
-     * Twig comments found
-     *
-     * @var array
-     */
-    $comments;
-
-    /**
-     * Twig methods found
-     *
-     * @var array
-     */
-    $methods;
-
-    /**
-     * Twig tags found
-     *
-     * @var array
-     */
-    $tags;
-
-    /**
-     * Template to parse
-     *
-     * @var string
-     */
-    $template;
-
     /**
      * Constructor
      *

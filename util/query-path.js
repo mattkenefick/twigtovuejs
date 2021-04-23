@@ -2,8 +2,6 @@
 import jsdom from 'jsdom';
 
 export default class QueryPath {
-    dom;
-
     /**
      * Initialize
      */
@@ -11,15 +9,6 @@ export default class QueryPath {
         typeof(xml) == 'string'
             ? this.fromString(xml)
             : this.fromObject(xml);
-    }
-
-    /**
-     * Get text from object
-     */
-    attr(key, val) {
-        return val !== undefined
-            ? this.json[key] = val
-            : this.json[key];
     }
 
     /**
@@ -61,12 +50,8 @@ export default class QueryPath {
     }
 
     /**
-     * Get text from object
+     * Remove element from DOM, keep children
      */
-    text() {
-        return this['$t'];
-    }
-
     unwrap(wrapper) {
         // place childNodes in document fragment
         var docFrag = this.dom.window.document.createDocumentFragment();
