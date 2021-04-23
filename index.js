@@ -1,4 +1,6 @@
 
-import Converter from './converter.js';
+// import Converter from './converter.js';
 
-export default Converter;
+// export default Converter;
+
+module.exports = require("./build/converter");
