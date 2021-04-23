@@ -86,8 +86,6 @@ export default class ConvertAttributes
                 // Set Vue style attribute
                 $element.setAttribute($newAttribute, $newValue);
 
-                console.log('Setting attribute:', $newAttribute, $newValue);
-
                 // Remove old attribute
                 $element.removeAttribute($attribute);
             });

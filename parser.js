@@ -31,25 +31,25 @@ export default class Parser
     constructor($template = '')
     {
         // Force html
-        if ($template.match(/\.twig$/)) {
-            this.import($template);
-        }
-        else {
+        // if ($template.match(/\.twig$/)) {
+        //     this.import($template);
+        // }
+        // else {
             this.setHtml($template);
-        }
+        // }
     }
 
-    /**
-     * Get source file
-     *
-     * @param  string $filename
-     *
-     * @return string
-     */
-    import($filename = '')
-    {
-        return this.setHtml(require($filename));
-    }
+    // /**
+    //  * Get source file
+    //  *
+    //  * @param  string $filename
+    //  *
+    //  * @return string
+    //  */
+    // import($filename = '')
+    // {
+    //     return this.setHtml(require($filename));
+    // }
 
     /**
      * Set markup

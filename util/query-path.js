@@ -1,5 +1,5 @@
 
-import jsdom from 'jsdom';
+// import jsdom from 'jsdom';
 
 export default class QueryPath {
     /**
@@ -11,12 +11,17 @@ export default class QueryPath {
             : this.fromObject(xml);
     }
 
+    document() {
+        return this.dom;
+        // return this.dom.window.document;
+    }
+
     /**
      * Create tag with attributes
      */
     createWith(tag, attributes)
     {
-        const element = this.dom.window.document.createElement(tag);
+        const element = this.document().createElement(tag);
 
         for (var i = 0, l = (attributes || []).length; i < l; i++) {
             const key = attributes.item(i).name;
@@ -32,14 +37,14 @@ export default class QueryPath {
      * Alias for query
      */
     find(query) {
-        return this.dom.window.document.querySelector(query);
+        return this.document().querySelector(query);
     }
 
     /**
      *
      */
     findAll(query) {
-        return this.dom.window.document.querySelectorAll(query);
+        return this.document().querySelectorAll(query);
     }
 
     /**
@@ -54,7 +59,7 @@ export default class QueryPath {
      */
     unwrap(wrapper) {
         // place childNodes in document fragment
-        var docFrag = this.dom.window.document.createDocumentFragment();
+        var docFrag = this.document().createDocumentFragment();
 
         while (wrapper.firstChild) {
             var child = wrapper.removeChild(wrapper.firstChild);
@@ -69,13 +74,16 @@ export default class QueryPath {
      * Set JSON from string
      */
     fromString(xml) {
-        return this.dom = new jsdom.JSDOM(xml);
+        const element = document.createElement('div');
+        element.innerHTML = xml;
+        return this.dom = element;
+        // return this.dom = new jsdom.JSDOM(xml);
     }
 
     /**
      * Convert JSON object to XML
      */
     toString() {
-        return this.dom.window.document.body.innerHTML;
+        return this.document().innerHTML;
     }
 }

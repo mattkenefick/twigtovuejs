@@ -155,6 +155,7 @@ export default class Converter
     htmlToXml($html)
     {
         // @todo Complicated conversion
+        // @urgent, it has a problem with .decode
         $html = entities.decode($html);
         $html = Converter.xmlEscape($html);
 
