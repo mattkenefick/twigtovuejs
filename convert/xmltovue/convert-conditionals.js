@@ -1,10 +1,10 @@
 
-const QueryPath = require('../../util/query-path.js');
+import QueryPath from '../../util/query-path.js';
 
 /**
  * Converter
  */
-class ConvertConditionals
+export default class ConvertConditionals
 {
     /**
      * Convert
@@ -63,15 +63,4 @@ class ConvertConditionals
 
         return $queryPath;
     }
-}
-
-
-// For testing
-// ----------------------------------------------------------------------------
-
-if (require.main === module) {
-    // Not implemented
-}
-else {
-    module.exports = ConvertConditionals;
 }

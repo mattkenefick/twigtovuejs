@@ -1,10 +1,10 @@
 
-const preg_replace = require('../polyfill/preg_replace.js');
+import preg_replace from '../polyfill/preg_replace.js';
 
 /**
  * String
  */
-class StringUtility
+export default class StringUtility
 {
     /**
      * Get between two integer points
@@ -44,6 +44,3 @@ class StringUtility
         return preg_replace(/({{|}})/mg, '', $str).trim();
     }
 }
-
-
-module.exports = StringUtility;

@@ -1,5 +1,5 @@
 
-module.exports = function preg_match_all(regex, str) { // eslint-disable-line camelcase
+export default function preg_match_all(regex, str) { // eslint-disable-line camelcase
     let matches = [...str.matchAll(regex)];
     let output = [];
 

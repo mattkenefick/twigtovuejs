@@ -1,11 +1,11 @@
 
-const preg_quote = require('../../polyfill/preg_quote.js');
-const preg_replace = require('../../polyfill/preg_replace.js');
+import preg_quote from '../../polyfill/preg_quote.js';
+import preg_replace from '../../polyfill/preg_replace.js';
 
 /**
  * Converter
  */
-class ConvertIf
+export default class ConvertIf
 {
     /**
      * Depth
@@ -230,15 +230,4 @@ class ConvertIf
 
         return preg_replace($from, $to, $content || '', 1);
     }
-}
-
-
-// For testing
-// ----------------------------------------------------------------------------
-
-if (require.main === module) {
-    // Not implemented
-}
-else {
-    module.exports = ConvertIf;
 }

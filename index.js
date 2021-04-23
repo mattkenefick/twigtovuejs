@@ -1,2 +1,4 @@
 
-module.exports = require('./converter.js');
+import Converter from './converter.js';
+
+export default Converter;

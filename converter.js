@@ -9,28 +9,27 @@
  * @license http://opensource.org/licenses/MIT MIT
  */
 
-const entities = require('html-entities');
-const fs = require('fs');
+import entities from 'html-entities';
+import fs from 'fs';
 
-const preg_replace = require('./polyfill/preg_replace.js');
+import preg_replace from './polyfill/preg_replace.js';
 
 // const libxmljs = require('libxmljs');
 // const xmlParser = require('fast-xml-parser');
-const QueryPath = require('./util/query-path.js');
+import QueryPath from './util/query-path.js';
 
-const Parser = require('./parser.js');
-const TagIdentifier = require('./tag-identifier.js');
-const TwigToXml = {
-    ConvertFor: require('./convert/twigtoxml/convert-for.js'),
-    ConvertIf: require('./convert/twigtoxml/convert-if.js'),
-    ConvertInclude: require('./convert/twigtoxml/convert-include.js'),
-}
-const XmlToVue = {
-    ConvertAttributes: require('./convert/xmltovue/convert-attributes.js'),
-    ConvertConditionals: require('./convert/xmltovue/convert-conditionals.js'),
-    ConvertIncludes: require('./convert/xmltovue/convert-includes.js'),
-    ConvertLoops: require('./convert/xmltovue/convert-loops.js'),
-}
+import Parser from './parser.js';
+import TagIdentifier from './tag-identifier.js';
+
+import TwigToXmlConvertFor from './convert/twigtoxml/convert-for.js';
+import TwigToXmlConvertIf from './convert/twigtoxml/convert-if.js';
+import TwigToXmlConvertInclude from './convert/twigtoxml/convert-include.js';
+
+import XmlToVueConvertAttributes from './convert/xmltovue/convert-attributes.js';
+import XmlToVueConvertConditionals from './convert/xmltovue/convert-conditionals.js';
+import XmlToVueConvertIncludes from './convert/xmltovue/convert-includes.js';
+import XmlToVueConvertLoops from './convert/xmltovue/convert-loops.js';
+
 
 /**
  * Converter
@@ -44,7 +43,7 @@ const XmlToVue = {
  * Usage:
  *     node converter.js
  */
-class Converter
+export default class Converter
 {
     /**
      * HTML
@@ -76,13 +75,13 @@ class Converter
      * @var array
      */
     $tags = {
-        'for'     : TwigToXml.ConvertFor,
-        'endfor'  : TwigToXml.ConvertFor,
-        'include' : TwigToXml.ConvertInclude,
-        'if'      : TwigToXml.ConvertIf,
-        'elseif'  : TwigToXml.ConvertIf,
-        'else'    : TwigToXml.ConvertIf,
-        'endif'   : TwigToXml.ConvertIf,
+        'for'     : TwigToXmlConvertFor,
+        'endfor'  : TwigToXmlConvertFor,
+        'include' : TwigToXmlConvertInclude,
+        'if'      : TwigToXmlConvertIf,
+        'elseif'  : TwigToXmlConvertIf,
+        'else'    : TwigToXmlConvertIf,
+        'endif'   : TwigToXmlConvertIf,
     };
 
     /**
@@ -312,13 +311,13 @@ class Converter
     {
         let $html;
 
-        $html = XmlToVue.ConvertAttributes.convert($queryPath);
+        $html = XmlToVueConvertAttributes.convert($queryPath);
 
-        $html = XmlToVue.ConvertLoops.convert($queryPath);
+        $html = XmlToVueConvertLoops.convert($queryPath);
 
-        $html = XmlToVue.ConvertIncludes.convert($queryPath);
+        $html = XmlToVueConvertIncludes.convert($queryPath);
 
-        $html = XmlToVue.ConvertConditionals.convert($queryPath);
+        $html = XmlToVueConvertConditionals.convert($queryPath);
 
         $html = this.cleanup($queryPath.html() || '<!-- Failed to parse in QueryPath -->');
 
@@ -388,21 +387,4 @@ class Converter
     {
         return $string.replaceAll('&', '&amp;');
     }
-}
-
-
-// For testing
-// ----------------------------------------------------------------------------
-
-require.extensions['.twig'] = function (module, filename) {
-    module.exports = fs.readFileSync(filename, 'utf8');
-};
-
-if (require.main === module) {
-    const str = require('./data/kitchen-sink.twig');
-    // const str = require('./data/basic-xpath.twig');
-    const html = Converter.convert(str);
-}
-else {
-    module.exports = Converter;
 }

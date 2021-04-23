@@ -2,7 +2,7 @@
 /**
  * Converter
  */
-class ConvertFor
+export default class ConvertFor
 {
     /**
      * Convert
@@ -61,15 +61,4 @@ class ConvertFor
         $value = $str.replaceAll($outerValue, '</for>');
         return $value;
     }
-}
-
-
-// For testing
-// ----------------------------------------------------------------------------
-
-if (require.main === module) {
-    // Not implemented
-}
-else {
-    module.exports = ConvertFor;
 }

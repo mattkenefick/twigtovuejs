@@ -1,7 +1,7 @@
 
-const jsdom = require('jsdom');
+import jsdom from 'jsdom';
 
-module.exports = class QueryPath {
+export default class QueryPath {
     dom;
 
     /**

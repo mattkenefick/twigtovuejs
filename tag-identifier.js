@@ -23,7 +23,7 @@
  *        Found: endif
  *     Returned:
  */
-class TagIdentifier
+export default class TagIdentifier
 {
     /**
      * HTML tags
@@ -107,24 +107,4 @@ class TagIdentifier
 
         return $value;
     }
-}
-
-
-// For testing
-// ----------------------------------------------------------------------------
-
-if (require.main === module) {
-    const str = `<div>
-        {% if foo and bar %}
-            <h1>Something &copy; </h1>
-        {% else-if %}
-            <p>Tibet and Nepal</p>
-        {% endif %}
-    </div>`;
-
-    const tagIdentifier = TagIdentifier.replace(str);
-    console.log(tagIdentifier);
-}
-else {
-    module.exports = TagIdentifier;
 }

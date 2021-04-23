@@ -1,5 +1,5 @@
 
-const QueryPath = require('../../util/query-path.js');
+import QueryPath from '../../util/query-path.js';
 
 /**
  * Converter
@@ -13,7 +13,7 @@ const QueryPath = require('../../util/query-path.js');
  *
  *     <div :class="foo">
  */
-class ConvertAttributes
+export default class ConvertAttributes
 {
     /**
      * Attributes we'll convert
@@ -122,16 +122,4 @@ class ConvertAttributes
             return ConvertAttributes.$attributesHtml;
         }
     }
-
-}
-
-
-// For testing
-// ----------------------------------------------------------------------------
-
-if (require.main === module) {
-    // Not implemented
-}
-else {
-    module.exports = ConvertAttributes;
 }

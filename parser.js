@@ -9,8 +9,8 @@
  * @license http://opensource.org/licenses/MIT MIT
  */
 
-const fs = require('fs');
-const preg_match_all = require('./polyfill/preg_match_all.js');
+import fs from 'fs';
+import preg_match_all from './polyfill/preg_match_all.js';
 
 /**
  * Parser
@@ -22,7 +22,7 @@ const preg_match_all = require('./polyfill/preg_match_all.js');
  *     {% (.*) %}
  *     {{ xyz }}
  */
-class Parser
+export default class Parser
 {
     /**
      * Twig comments found
@@ -177,33 +177,4 @@ class Parser
 
         this.variables = $matches;
     }
-}
-
-
-// For testing
-// ----------------------------------------------------------------------------
-
-require.extensions['.twig'] = function (module, filename) {
-    module.exports = fs.readFileSync(filename, 'utf8');
-};
-
-if (require.main === module) {
-    // const str = `<div>
-    //     {# Test Comment #}
-    //     <h3>Title</h3>
-    //     {{ foo }}
-    // </div>`;
-    // const str = './data/kitchen-sink.twig';
-    const str = './data/basic-comments.twig';
-
-    const parser = new Parser(str);
-    parser.parse();
-
-    console.log('Comments', parser.comments);
-    console.log('Methods', parser.methods);
-    console.log('Tags', parser.tags);
-    console.log('Variables', parser.variables);
-}
-else {
-    module.exports = Parser;
 }

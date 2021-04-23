@@ -1,16 +1,16 @@
 
-const array_slice = require('../../polyfill/array_slice.js');
-const preg_match = require('../../polyfill/preg_match.js');
-const preg_replace = require('../../polyfill/preg_replace.js');
-const preg_replace_callback = require('../../polyfill/preg_replace_callback.js');
+import array_slice from '../../polyfill/array_slice.js';
+import preg_match from '../../polyfill/preg_match.js';
+import preg_replace from '../../polyfill/preg_replace.js';
+import preg_replace_callback from '../../polyfill/preg_replace_callback.js';
 
-const dJSON = require('dirty-json');
-const StringUtility = require('../../util/string.js');
+import dJSON from 'dirty-json';
+import StringUtility from '../../util/string.js';
 
 /**
  * Converter
  */
-class ConvertInclude
+export default class ConvertInclude
 {
     /**
      * Prevents us from creating attributes for object references
@@ -156,15 +156,4 @@ class ConvertInclude
 
         return $value;
     }
-}
-
-
-// For testing
-// ----------------------------------------------------------------------------
-
-if (require.main === module) {
-    // Not implemented
-}
-else {
-    module.exports = ConvertInclude;
 }

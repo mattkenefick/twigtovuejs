@@ -1,10 +1,10 @@
 
-const QueryPath = require('../../util/query-path.js');
+import QueryPath from '../../util/query-path.js';
 
 /**
  * Converter
  */
-class ConvertIncludes
+export default class ConvertIncludes
 {
     /**
      * Convert
@@ -40,16 +40,4 @@ class ConvertIncludes
 
         return $queryPath.html() || '';
     }
-
-}
-
-
-// For testing
-// ----------------------------------------------------------------------------
-
-if (require.main === module) {
-    // Not implemented
-}
-else {
-    module.exports = ConvertIncludes;
 }
