@@ -183,7 +183,7 @@ var Converter = function () {
         value: function htmlToXml($html) {
             // @urgent, it has a problem with .decode
             // For some reason, `entities` is undefined when compiled?
-            $html = _htmlEntities2.default.decode($html);
+            // $html = entities.decode($html);
             $html = Converter.xmlEscape($html);
 
             // Replace tag openings inside quotes
