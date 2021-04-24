@@ -28,6 +28,12 @@ var QueryPath = function () {
         key: 'document',
         value: function document() {
             // return this.dom;
+            return this.dom.window.document;
+        }
+    }, {
+        key: 'body',
+        value: function body() {
+            // return this.dom;
             return this.dom.window.document.body;
         }
 
@@ -87,7 +93,6 @@ var QueryPath = function () {
     }, {
         key: 'unwrap',
         value: function unwrap(wrapper) {
-            // place childNodes in document fragment
             var docFrag = this.document().createDocumentFragment();
 
             while (wrapper.firstChild) {
@@ -120,7 +125,7 @@ var QueryPath = function () {
     }, {
         key: 'toString',
         value: function toString() {
-            return this.document().innerHTML;
+            return this.body().innerHTML;
         }
     }]);
 

@@ -3,7 +3,6 @@
     "version": "0.1.0",
     "description": "Javascript implementation of the TwigToVue for PHP designed for webpack loaders",
     "main": "index.js",
-    "type": "module",
     "scripts": {
         "build": "babel lib -d build",
         "test": "mocha -R spec"

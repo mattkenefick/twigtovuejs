@@ -181,8 +181,8 @@ var Converter = function () {
     }, {
         key: 'htmlToXml',
         value: function htmlToXml($html) {
-            // @todo Complicated conversion
             // @urgent, it has a problem with .decode
+            // For some reason, `entities` is undefined when compiled?
             $html = _htmlEntities2.default.decode($html);
             $html = Converter.xmlEscape($html);
 
