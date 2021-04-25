@@ -67,6 +67,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function btoa(string) {
+    return Buffer.from(string).toString('base64');
+}
+
+function atob(string) {
+    return Buffer.from(string, 'base64').toString();
+}
+
 /**
  * Converter
  *
@@ -79,6 +87,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Usage:
  *     node converter.js
  */
+
 var Converter = function () {
     function Converter() {
         _classCallCheck(this, Converter);
@@ -160,12 +169,6 @@ var Converter = function () {
                 // Run convert on tag class
                 $html = $class ? $class.convert($html, $tag, $outerValue, $params) : $html;
             });
-
-            // Convert appends
-            $html = Converter.fixAppends($html);
-
-            // Convert comments
-            $html = Converter.fixComments($html);
 
             return this.html = $html;
         }
@@ -373,10 +376,17 @@ var Converter = function () {
         value: function convert($filepathOrTemplate) {
             var $html = void 0,
                 $instance = void 0,
+                matches = void 0,
                 $parser = void 0,
                 $qp = void 0,
                 $vueHtml = void 0,
                 $xml = void 0;
+
+            // Convert comments to base 64 to hide any possible tags they contain
+            // Otherwise we'll get errors from trying to process tags within {# #} blocks
+            ($filepathOrTemplate.match(/{#[\s\n]?([^#]+)[\s\n]?#}/gmi) || []).forEach(function (value, key) {
+                $filepathOrTemplate = $filepathOrTemplate.replace(value, '!### ' + btoa(unescape(encodeURIComponent(value))) + ' ###!');
+            });
 
             // Parse out comments, methods, tags, and variables
             $parser = new _parser2.default($filepathOrTemplate);
@@ -388,6 +398,19 @@ var Converter = function () {
             // Convert
             // @todo, do we need to pass in everything from parser?
             $html = $instance.twigToHtml($parser, $parser.template);
+
+            // Revert our temporarily converted comments to their normal state
+            ($html.match(/!### ([^#]+) ###!/gmi) || []).forEach(function (value, key) {
+                value = value.replace('!### ', '');
+                value = value.replace(' ###!', '');
+                $html = $html.replace('!### ' + value + ' ###!', decodeURIComponent(escape(atob(value))));
+            });
+
+            // Convert appends
+            $html = Converter.fixAppends($html);
+
+            // Convert comments
+            $html = Converter.fixComments($html);
 
             // Convert our HTML tags into generic XML which helps
             // us find closing tags

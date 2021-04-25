@@ -46,6 +46,7 @@ var ConvertIncludes = function () {
 
                 $component = $item.getAttribute('component');
                 $attributes = $item.attributes;
+                $attributes.removeNamedItem('component');
 
                 // Create element
                 var element = $queryPath.createWith($component, $attributes);

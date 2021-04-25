@@ -1,0 +1,38 @@
+<div>
+{#
+ ┌─────────────────────────────────────────────────────────────────────────────┐
+ │                                                                             │
+ │  View/User/ProfileBlock                                                     │
+ │                                                                             │
+ │  Typically used in an article or editorial.                                 │
+ │                                                                             │
+ │  Options:                                                                   │
+ │      `person` <ModelPerson>                                                 │
+ │      Person associated with this profile                                    │
+ │                                                                             │
+ │      `type` <String>                                                        │
+ │      Size for avatar                                                        │
+ │                                                                             │
+ │      `user` <ModelUser>                                                     │
+ │      User associated with this profile                                      │
+ │                                                                             │
+ │  Example:                                                                   │
+ │                                                                             │
+ │      {% include "Web/View/User/ProfileBlock/ProfileBlock.twig" with {       │
+ │          person: person,                                                    │
+ │          user: user,                                                        │
+ │      } %}                                                                   │
+ │                                                                             │
+ └─────────────────────────────────────────────────────────────────────────────┘
+#}
+    <h3>Title</h3>
+
+    {#
+        In previous implementations, we tried using {{ svg(...) }}
+        and {{ imageUrl(...) }} without success. That's because they
+        are backend methods and fail through Vue (i think).
+
+        This is worth revisiting.
+    #}
+    <div>&nbsp;</div>
+</div>
