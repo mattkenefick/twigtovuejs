@@ -1,0 +1,355 @@
+
+{#
+ ┌─────────────────────────────────────────────────────────────────────────────┐
+ │                                                                             │
+ │  Page/Film/Single                                                           │
+ │                                                                             │
+ │  Note that this DOES NOT have the ".container" class on the main element    │
+ │  so we can run fluid.                                                       │
+ │                                                                             │
+ │  Options:                                                                   │
+ │                                                                             │
+ │      `film` <Model/Film>                                                    │
+ │      Instance of the film we want to play                                   │
+ │                                                                             │
+ └─────────────────────────────────────────────────────────────────────────────┘
+#}
+
+<div class="page-film-single {{ brightnessClass }}">
+
+    {#
+      ┌────────────────────────────────────────────────────────────────────────┐
+      │                                                                        │
+      │ Video Theater                                                          │
+      │                                                                        │
+      │ We check for `getSourceUrl` here because there's no point in           │
+      │ half rendering the VideoTheater if we don't have the required          │
+      │ variables for rendering it.                                            │
+      │                                                                        │
+      │ If we really must, we should use an `else` to show something           │
+      │ different. The variables within this subview are assumed to            │
+      │ exist; and should exist.                                               │
+      │                                                                        │
+      │ mk: 12/4/20                                                            │
+      │ Sometimes there may be a flash of black between transitions.           │
+      │ That's because the content.getSecondaryColor() doesn't have            │
+      │ proper content yet.                                                    │
+      │                                                                        │
+      └────────────────────────────────────────────────────────────────────────┘
+    #}
+
+    <div
+        ref="videoTheaterWrapper"
+        class="videotheater-wrapper"
+        style="background-color: {{ film.content.getSecondaryColor() }};">
+        <div ref="videoTheaterWrapperInner" class="videotheater-wrapper-inner">
+            {% if film.getSourceUrl() %}
+                {% include "Web/View/Film/VideoTheater/VideoTheater" with {
+                    ref: "videoTheater",
+                    film: film,
+                } %}
+            {% else %}
+                <div
+                    ref="videoTheaterPlaceholder"
+                    class="view-placeholder-videotheater"
+                    style="background-color: {{ film.content.getPrimaryColor() }}">
+
+                    <lottie-animation
+                        class="view-animation"
+                        path="image/animations/infinity.json"
+                        width="300"
+                        height="300"
+                        :loop="true"
+                        :autoPlay="true"
+                        :speed="1"
+                    />
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {#
+      ┌────────────────────────────────────────────────────────────────────────────┐
+      │                                                                            │
+      │ Film Article                                                               │
+      │                                                                            │
+      │ mk: 12/10                                                                  │
+      │ We tried moving color/background to VueJS to be analyzed, but that means   │
+      │ we can't render it server-side. We hit the models directly so it can be    │
+      │ synced both frontend/backend.                                              │
+      │                                                                            │
+      │ mk: 1/31/21                                                                │
+      │ We removed color: film.content.getColorForeground()  because it's          │
+      │ making some of these colors black and we're removing foreground from       │
+      │ settings for now.                                                          │
+      │                                                                            │
+      └────────────────────────────────────────────────────────────────────────────┘
+    #}
+    <article style="background-color: {{ film.content.getSecondaryColor() }};">
+        <main>
+            {% if film.getDescription() %}
+                <section class="content-divider">
+                    {% if film.review and film.review.getDescription() %}
+                        <div class="review">
+                            <div class="description">
+                                &ldquo;{{ film.review.getDescription() }}&rdquo;
+                            </div>
+                            <a class="author" href="{{ film.review.getUrl() }}">
+                                <img src="{{ imageUrl("/branding/circle-badge.svg") }}" />
+
+                                <span>
+                                    {{ trans('content.read_the_review') }} →
+                                </span>
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="description">
+                            {{ film.getDescription() }}
+                        </div>
+                    {% endif %}
+                </section>
+            {% endif %}
+
+            <section class="tab-bar">
+                <div class="horizontal-list type-spaced">
+                    {% if film.honor.length %}
+                        <a class="tab-honors" href="#honors">{{ trans('content.honors') }}</a>
+                    {% endif %}
+
+                    {% if film.link.getPress().length %}
+                        <a class="tab-press" href="#press">{{ trans('content.press') }}</a>
+                    {% endif %}
+
+                    {% if film.content.media.getGallery().length %}
+                        <a class="tab-gallery" href="#gallery">{{ trans('content.gallery') }}</a>
+                    {% endif %}
+
+                    {% if film.crew.length %}
+                        <a class="tab-credits" href="#credits">{{ trans('content.credits') }}</a>
+                    {% endif %}
+
+                    <a class="tab-info" href="#info">{{ trans('content.info') }}</a>
+
+                    <a class="tab-contact" href="#contact" v-on:click="Handle_OnClickContact">{{ trans('content.contact') }}</a>
+                </div>
+            </section>
+
+            <section class="tabs">
+                <!-- Honors-->
+                {% if film.honor.length %}
+                    <div class="tab-honors">
+                        <ul class="grid col-x4 mq-md-col-2">
+                            {% for honor in film.honor %}
+                                <li>
+                                    <figure class="align-center">
+                                        {% if honor.honor.media and honor.honor.media.id %}
+                                            <img src="{{ honor.honor.media.getUrl() }}" />
+                                        {% else %}
+                                            <div>
+                                                {{ svg("generic/honor.svg") }}
+                                            </div>
+                                        {% endif %}
+
+                                        <figcaption>
+                                            <b>{{ honor.honor.getTitle() }}</b>
+                                            <em>{{ honor.honor.getDescription() }}</em>
+                                        </figcaption>
+                                    </figure>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <!-- Press-->
+                {% if film.link.getPress().length %}
+                    <div class="tab-press">
+                        {% for link in film.link.getPress() %}
+                            {% include "Web/View/Component/ThumbnailLink/ThumbnailLink.twig" with {
+                                type: "row",
+                                image: {
+                                    src: link.getMediaUrl(),
+                                },
+                                link: {
+                                    href: link.getLink(),
+                                },
+                                title: link.getTitle(),
+                                description: link.getText(),
+                            } %}
+                        {% endfor %}
+
+                        {% if film.link.length == 0 %}
+                            <h3>No press</h3>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                <!-- Media-->
+                {% if film.content.media.getGallery().length %}
+                    <div class="tab-gallery">
+                        <div class="gallery-vertical">
+                            <!--
+                                We may want to cycle through the whole media
+                                collection and conditionally show a gallery item,
+                                a trailer, a poster, an etc
+                            -->
+                            {% for index, model in film.content.media.getGallery() %}
+                                <figure v-on:click="Handle_OnClickGalleryItem" data-index="{{ index }}">
+                                    <div>
+                                        <img src="{{ model.getStandardUrl() }}" />
+                                    </div>
+                                </figure>
+                            {% endfor %}
+
+                            {#
+                                <figure>
+                                    <div>
+                                        <img src="/image/generic/film-poster.svg" />
+                                    </div>
+                                    <figcaption>Poster</figcaption>
+                                </figure>
+
+                                <figure class="controls-on-hover">
+                                    <div>
+                                        <div class="controls">
+                                            <img src="/image/icon/icon-download.svg" />
+                                            <p>
+                                                <strong>Download</strong>
+                                                <em>(45kb)</em>
+                                            </p>
+                                        </div>
+                                        <img src="/image/generic/film-graphic.svg" />
+                                    </div>
+                                    <figcaption>Still</figcaption>
+                                </figure>
+
+                                <figure class="controls-on-hover">
+                                    <div>
+                                        <div class="controls">
+                                            <img src="/image/icon/icon-media-play-lg.svg" />
+                                        </div>
+                                        <img src="/image/generic/film-graphic.svg" />
+                                    </div>
+                                    <figcaption>Trailer (:30)</figcaption>
+                                </figure>
+                            #}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Crew-->
+                {% if film.crew.length %}
+                    <div class="tab-credits">
+                        {% include "Web/View/Film/CrewList/CrewList" with {
+                            film: film,
+                        } %}
+                    </div>
+                {% endif %}
+
+                <!-- Info-->
+                <div class="tab-info">
+                    {% if film.content.getContent() %}
+                        <div class="filmmaker-statement">
+                            {{ film.content.getContent() }}
+                        </div>
+                    {% endif %}
+
+                    <dl>
+                        <dt>{{ trans('content.duration') }}</dt>
+                        <dd>{{ film.getDurationAsMinutes() }} {{ trans('content.minutes') }}</dd>
+
+                        <dt>{{ trans('content.genre') }}</dt>
+                        <dd class="tags-list">
+                            {% if film.label.getGenre() %}
+                                <a href="/explore?genre={{ film.label.getGenre().getValue() }}" class="badge {{ film.label.getGenre().getColorClass() }}">
+                                    {{ film.label.getGenre().getMetaA() }}
+                                </a>
+                            {% else %}
+                                <span>--</span>
+                            {% endif %}
+                        </dd>
+
+                        <dt>{{ trans('content.tags') }}</dt>
+                        <dd class="tags-list">
+                            {% for label in film.label.getTags() %}
+                                <a href="/explore?tags={{ label.getValue() }}" class="badge {{ label.getColorClass() }}">
+                                    {{ label.getMetaA() }}
+                                </a>
+                            {% endfor %}
+                        </dd>
+{#
+                        <dt>{{ trans('content.status') }}</dt>
+                        <dd>
+                            --
+                        </dd>
+#}
+                        <dt>{{ trans('content.release_date') }}</dt>
+                        <dd>
+                            {{ film.getAvailableAtFormatted() }}
+                        </dd>
+
+                        <dt>{{ trans('content.contact') }}</dt>
+                        <dd>
+                            {% if film.filmmaker.user.id %}
+                                <a href="{{ film.getFilmmaker().user.getUrl() }}">
+                                    {{ film.getFilmmaker().getFullName() }}
+                                </a>
+                            {% else %}
+                                <a v-on:click="Handle_OnClickContact">
+                                    {{ film.getFilmmaker().getFullName() }}
+                                </a>
+                            {% endif %}
+                        </dd>
+
+                        {#
+                        <dt>{{ trans('content.rating') }}</dt>
+                        <dd>
+                            {% if film.isMature() %}
+                                <span>{{ trans('content.mature') }}</span>
+                            {% else %}
+                                <span>{{ trans('content.general') }}</span>
+                            {% endif %}
+                        </dd>
+                        #}
+                    </dl>
+                </div>
+
+                <!-- Contact-->
+                <div class="tab-contact">
+                </div>
+
+                {% if me and false %}
+                    <ViewComponentFollowButton
+                        :sender="this.me"
+                        :receiver="this.film" />
+                {% endif %}
+            </section>
+        </main>
+    </article>
+
+    {#
+        Utilities
+    #}
+    <section class="utilities">
+        {% if film.filmmaker.user.id %}
+            {% include "Web/View/Message/ComposeModal/ComposeModal" with {
+                ref: "composeModal",
+                person: film.filmmaker,
+                user: film.filmmaker.user,
+            } %}
+        {% endif %}
+
+        <ViewComponentLightbox
+            ref="lightbox"
+            :collection="film.content.media" />
+    </section>
+
+    {#
+        Recommendation
+    #}
+    <section class="view-recommendations state-on-light">
+        {% include "Web/View/Component/Recommended/Recommended" with {
+            collection: relatedFilm,
+        } %}
+    </section>
+</div>
