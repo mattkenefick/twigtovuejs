@@ -3,10 +3,11 @@ const fs = require('fs');
 const path = require('path');
 const should = require('should');
 
-const converter = require('../build/converter.js').default;
+const converter = require('../dist/converter.js').default;
 
 // https://github.com/tj/should.js
 describe('converter', function () {
+
     it('should convert a template', function (done) {
         const tpl = `<div class="{{ foo }}">test</div>`;
         const html = converter.convert(tpl);
@@ -21,9 +22,23 @@ describe('converter', function () {
         done();
     });
 
+    it('should not render basic variables', function (done) {
+        const tpl = `<div>Variable: {{ foo }}</div>`;
+        const html = converter.convert(tpl);
+
+        // String
+        html.should.have.type('string');
+
+        // Match
+        html.should.equal('<div>Variable: {{ foo }}</div>');
+
+        // Complete
+        done();
+    });
+
     it('should convert comments', function (done) {
         let a, b;
-        const html = fs.readFileSync('lib/data/basic-comments.twig', 'utf8');
+        const html = fs.readFileSync('src/data/basic-comments.twig', 'utf8');
         const vueHtml = converter.convert(html);
 
         a = '<!-- Test Comment -->';
@@ -36,7 +51,7 @@ describe('converter', function () {
 
     it('should convert complex comments', function (done) {
         let a, b;
-        const html = fs.readFileSync('lib/data/complex-comments.twig', 'utf8');
+        const html = fs.readFileSync('src/data/complex-comments.twig', 'utf8');
         const vueHtml = converter.convert(html);
 
         a = '{{ imageUrl(...) }}';
@@ -62,7 +77,7 @@ describe('converter', function () {
 
     it('should convert a else-if', function (done) {
         let a, b;
-        const html = fs.readFileSync('lib/data/basic-if-else.twig', 'utf8');
+        const html = fs.readFileSync('src/data/basic-if-else.twig', 'utf8');
         const vueHtml = converter.convert(html);
 
         a = '<div v-else-if="something == \'something\'">';
@@ -86,7 +101,7 @@ describe('converter', function () {
 
     it('should convert comments', function (done) {
         let a, b;
-        const html = fs.readFileSync('lib/data/kitchen-sink.twig', 'utf8');
+        const html = fs.readFileSync('src/data/kitchen-sink.twig', 'utf8');
         const vueHtml = converter.convert(html);
 
         a = '<div class="second-loop" v-for="(model, index) of collection" v-bind:key="index">';
@@ -99,7 +114,7 @@ describe('converter', function () {
 
     it('should convert include objects', function (done) {
         let a, b;
-        const html = fs.readFileSync('lib/data/include-objects.twig', 'utf8');
+        const html = fs.readFileSync('src/data/include-objects.twig', 'utf8');
         const vueHtml = converter.convert(html);
 
         a = ' :header="\'Literal String\'';
@@ -117,7 +132,7 @@ describe('converter', function () {
 
     it('should convert multiple attributes', function (done) {
         let a, b;
-        const html = fs.readFileSync('lib/data/multiple-attributes.twig', 'utf8');
+        const html = fs.readFileSync('src/data/multiple-attributes.twig', 'utf8');
         const vueHtml = converter.convert(html);
 
         a = '<a :href="header.href" :title="header.text">';
@@ -130,7 +145,7 @@ describe('converter', function () {
 
     it('should convert namespaced includes', function (done) {
         let a, b;
-        const html = fs.readFileSync('lib/data/kitchen-sink.twig', 'utf8');
+        const html = fs.readFileSync('src/data/kitchen-sink.twig', 'utf8');
         const vueHtml = converter.convert(html);
 
         a = '<headermain';
@@ -148,7 +163,7 @@ describe('converter', function () {
 
     it('should convert sequential duplicate endings', function (done) {
         let a, b;
-        const html = fs.readFileSync('lib/data/kitchen-sink.twig', 'utf8');
+        const html = fs.readFileSync('src/data/kitchen-sink.twig', 'utf8');
         const vueHtml = converter.convert(html);
 
         a = '<viewfilmindex :films="[]"></viewfilmindex>';
@@ -158,4 +173,5 @@ describe('converter', function () {
 
         done()
     });
+
 });

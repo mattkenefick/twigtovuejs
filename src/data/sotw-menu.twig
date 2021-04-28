@@ -1,0 +1,43 @@
+
+{#
+  ┌────────────────────────────────────────────────────────────────────────────┐
+  │                                                                            │
+  │ View/Account/SideMenu                                                      │
+  │                                                                            │
+  └────────────────────────────────────────────────────────────────────────────┘
+#}
+
+<div class="view-account-sidemenu">
+    <ul class="unstyled">
+        <li class="menu-item" ref="messages">
+            <a href="{{ pageUrl('/account/messages') }}" title="{{ twigNavigateCaption('account.messages') }}">
+                {{ svg("icon/icon-account-messages.svg") }}
+                <span>{{ trans("account.messages") }}</span>
+            </a>
+        </li>
+        <li class="menu-item" ref="films">
+            <a href="{{ pageUrl('/account/films') }}" title="{{ twigNavigateCaption('account.films') }}">
+                {{ svg("icon/icon-account-film.svg") }}
+                <span>{{ trans("account.films") }}</span>
+            </a>
+        </li>
+        <li class="menu-item" ref="profile">
+            <a href="{{ pageUrl('/account/profile') }}" title="{{ twigNavigateCaption('account.profile') }}">
+                {{ svg("icon/icon-account-user.svg") }}
+                <span>{{ trans("account.profile") }}</span>
+            </a>
+        </li>
+        <li class="menu-item" ref="settings">
+            <a href="{{ pageUrl('/account/settings') }}" title="{{ twigNavigateCaption('account.settings') }}">
+                {{ svg("icon/icon-account-settings.svg") }}
+                <span>{{ trans("account.settings") }}</span>
+            </a>
+        </li>
+        <li class="menu-item" ref="billing">
+            <a href="{{ pageUrl('/page/pricing') }}" title="{{ twigNavigateCaption('account.billing') }}">
+                {{ svg("icon/icon-account-billing.svg") }}
+                <span>{{ trans("account.billing") }}</span>
+            </a>
+        </li>
+    </ul>
+</div>
