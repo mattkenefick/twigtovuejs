@@ -1,0 +1,87 @@
+
+{#
+    ┌─────────────────────────────────────────────────────────────────────────────┐
+    │                                                                             │
+    │  View/Account/Form/PressForm                                                │
+    │                                                                             │
+    │  Options:                                                                   │
+    │                                                                             │
+    │      `film` <Model\Film>                                                    │
+    │      Film model                                                             │
+    │                                                                             │
+    └─────────────────────────────────────────────────────────────────────────────┘
+#}
+
+<div class="view-account-form-pressform admin-form">
+    <header>
+        <h6 class="admin-header-field">
+            {{ trans('content.press') }}
+        </h6>
+        <p>
+            List articles and media coverage of your film.
+        </p>
+    </header>
+    <div>
+        <!-- User context -->
+        {% if film.link.getPress().length == 0 %}
+            <div class="alert type-warning">
+                <h4>Add a press link</h4>
+                <p>
+                    Add a URL in the field below and press "Add". We'll
+                    automatically fill in the details for you.
+                </p>
+            </div>
+        {% endif %}
+
+        <!-- List of existing -->
+        <ul class="press-list list-horizontal" v-draggable="{ value: film.link.models, handle: 'action-reorder' }">
+            {% for index, link in film.link.getPress() %}
+                <li class="list-horizontal-row" data-index="{{ index }}" data-id="{{ link.id }}" data-order="{{ link.getOrder() }}">
+                    <figure class="align-center">
+                        <img src="{{ link.getMediaUrl() }}" />
+                    </figure>
+                    <div class="item press-link">
+                        <strong class="font-size-lg">
+                            {{ link.getTitle() }}
+                        </strong>
+                        <p class="font-size-xs flush">
+                            {{ link.getText() }}
+                        </p>
+                        <small class="font-size-xs" href="{{ link.getLink() }}">
+                            {{ link.getLink() }}
+                        </small>
+                    </div>
+                    <a href="#" type="action action-reorder">
+                        {{ icon('icon-reorder') }}
+                    </a>
+                    <a type="action"
+                        film_id="{{ film.id }}"
+                        link_id="{{ link.id }}"
+                        v-on:click="Handle_OnClickRemovePress">
+                        {{ icon('icon-remove') }}
+                    </a>
+
+                    <input type="hidden" name="film[press][]id" value="{{ link.id }}" />
+                </li>
+            {% endfor %}
+        </ul>
+
+        <!-- Add new -->
+        <div class="mt-3">
+            <label class="inline-button">
+                <input
+                    ref="pressField"
+                    type="text"
+                    name="press[new][link]"
+                    placeholder="{{ trans('form.press_link') }}"
+                    autocomplete="chrome-off"
+                    v-on:keydown.13="Handle_OnClickAddPress"
+                    />
+
+                <button v-on:click="Handle_OnClickAddPress">
+                    {{ trans('form.add') }}
+                </button>
+            </label>
+        </div>
+    </div>
+</div>

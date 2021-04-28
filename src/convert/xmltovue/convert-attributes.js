@@ -49,7 +49,7 @@ export default class ConvertAttributes
         let $attributes, $html;
 
         $html = $queryPath.html() || '';
-        $html = encodeURIComponent($html);
+        // $html = encodeURIComponent($html);
         $attributes = ConvertAttributes.getAttributesFromHtml($html);
 
         // Parse attributes
@@ -99,10 +99,10 @@ export default class ConvertAttributes
      */
     static getAttributesFromHtml($html)
     {
-        let $matches, $pattern;
+        let m, matches = [], regex, str;
 
         // v2: Adding the brackets
-        $pattern = new RegExp('\s([a-zA-Z\_\-]+)=["\'][^"\']+["\']', 'img');
+        regex = /\s([a-zA-Z\_\-]+)=["\'][^"\']+["\']/gmi;
 
         // v1: Why did we ignore the {{ brackets?
         // $regex = '#\s([a-zA-Z\_\-]+)=["\'](?={{)[^"\']+["\']#im';
@@ -110,12 +110,24 @@ export default class ConvertAttributes
         // $regex = '#\s([a-zA-Z\_]+)=["\'](?={{)["\']#im';
         // $html = '<a href="{{ header.href }}" title="{{ header.text">{{ header.title }}</a>';
 
-        // Run matching
-        $matches = [...$html.matchAll($pattern)];
+        while ((m = regex.exec($html)) !== null) {
+            // This is necessary to avoid infinite loops with zero-width matches
+            if (m.index === regex.lastIndex) {
+                regex.lastIndex++;
+            }
+
+            // The result can be accessed through the `m`-variable.
+            m.forEach((match, groupIndex) => {
+                if (groupIndex == 1) {
+                    matches.push(match);
+                }
+                // console.log(`Found match, group ${groupIndex}: ${match}`);
+            });
+        }
 
         // Return matches
-        if ($matches.length > 1) {
-            return $matches[1].filter((el, index, arr) => {
+        if (matches.length > 1) {
+            return matches.filter((el, index, arr) => {
                 return index == arr.indexOf(el);
             });
         }

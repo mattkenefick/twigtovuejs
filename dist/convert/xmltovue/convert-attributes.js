@@ -12,8 +12,6 @@ var _queryPath2 = _interopRequireDefault(_queryPath);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var staticObject = {
@@ -63,7 +61,7 @@ var ConvertAttributes = function () {
                 $html = void 0;
 
             $html = $queryPath.html() || '';
-            $html = encodeURIComponent($html);
+            // $html = encodeURIComponent($html);
             $attributes = ConvertAttributes.getAttributesFromHtml($html);
 
             // Parse attributes
@@ -117,11 +115,13 @@ var ConvertAttributes = function () {
     }, {
         key: 'getAttributesFromHtml',
         value: function getAttributesFromHtml($html) {
-            var $matches = void 0,
-                $pattern = void 0;
+            var m = void 0,
+                matches = [],
+                regex = void 0,
+                str = void 0;
 
             // v2: Adding the brackets
-            $pattern = new RegExp('\s([a-zA-Z\_\-]+)=["\'][^"\']+["\']', 'img');
+            regex = /\s([a-zA-Z\_\-]+)=["\'][^"\']+["\']/gmi;
 
             // v1: Why did we ignore the {{ brackets?
             // $regex = '#\s([a-zA-Z\_\-]+)=["\'](?={{)[^"\']+["\']#im';
@@ -129,12 +129,24 @@ var ConvertAttributes = function () {
             // $regex = '#\s([a-zA-Z\_]+)=["\'](?={{)["\']#im';
             // $html = '<a href="{{ header.href }}" title="{{ header.text">{{ header.title }}</a>';
 
-            // Run matching
-            $matches = [].concat(_toConsumableArray($html.matchAll($pattern)));
+            while ((m = regex.exec($html)) !== null) {
+                // This is necessary to avoid infinite loops with zero-width matches
+                if (m.index === regex.lastIndex) {
+                    regex.lastIndex++;
+                }
+
+                // The result can be accessed through the `m`-variable.
+                m.forEach(function (match, groupIndex) {
+                    if (groupIndex == 1) {
+                        matches.push(match);
+                    }
+                    // console.log(`Found match, group ${groupIndex}: ${match}`);
+                });
+            }
 
             // Return matches
-            if ($matches.length > 1) {
-                return $matches[1].filter(function (el, index, arr) {
+            if (matches.length > 1) {
+                return matches.filter(function (el, index, arr) {
                     return index == arr.indexOf(el);
                 });
             } else {
