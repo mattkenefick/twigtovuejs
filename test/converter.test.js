@@ -99,12 +99,25 @@ describe('converter', function () {
         done();
     });
 
-    it('should convert comments', function (done) {
+    it('should convert the kichen sink', function (done) {
         let a, b;
         const html = fs.readFileSync('src/data/kitchen-sink.twig', 'utf8');
         const vueHtml = converter.convert(html);
 
         a = '<div class="second-loop" v-for="(model, index) of collection" v-bind:key="index">';
+        b = vueHtml;
+
+        b.should.containEql(a);
+
+        done()
+    });
+
+    it('should convert multiline classes', function (done) {
+        let a, b;
+        const html = fs.readFileSync('src/data/multiline-classes.twig', 'utf8');
+        const vueHtml = converter.convert(html);
+
+        a = `<dl :class="'view-component-statlabel type-horizontalalignment-' + horizontalAlignment + ' type-size-' + size + ' type-verticalalignment-' + verticalAlignment">`;
         b = vueHtml;
 
         b.should.containEql(a);

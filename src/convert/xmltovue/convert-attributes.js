@@ -80,6 +80,14 @@ export default class ConvertAttributes
                 $newValue = $newValue.replaceAll(" + ''", '');
                 $newValue = $newValue.replaceAll(" + ' '", '');
 
+                // Kill new lines
+                $newValue = $newValue.replaceAll('\n', '');
+                $newValue = $newValue.replaceAll(/\s+/img, ' ');
+
+                // Kill trailing empty strings + opening strings
+                $newValue = $newValue.replaceAll(/^'\s/img, '\'');
+                $newValue = $newValue.replaceAll(/\+\s''$/img, '');
+
                 // Trim
                 $newValue = $newValue.trim();
 
