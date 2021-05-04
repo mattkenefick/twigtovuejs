@@ -1,6 +1,6 @@
 {
     "name": "twigtovuejs",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "description": "Javascript implementation of the TwigToVue for PHP designed for webpack loaders",
     "main": "dist/index.js",
     "scripts": {
@@ -17,7 +17,9 @@
         "jsdom": "^16.5.3"
     },
     "devDependencies": {
-        "babel-preset-env": "^1.7.0",
+        "@babel/cli": "^7.13.16",
+        "@babel/core": "^7.14.0",
+        "@babel/preset-env": "^7.14.1",
         "mocha": "^8.3.2",
         "should": "^13.2.3"
     }

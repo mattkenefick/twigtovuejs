@@ -1,135 +1,127 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
+exports["default"] = void 0;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _jsdom = _interopRequireDefault(require("jsdom"));
 
-var _jsdom = require('jsdom');
-
-var _jsdom2 = _interopRequireDefault(_jsdom);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var QueryPath = function () {
-    /**
-     * Initialize
-     */
-    function QueryPath(xml) {
-        _classCallCheck(this, QueryPath);
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-        typeof xml == 'string' ? this.fromString(xml) : this.fromObject(xml);
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var QueryPath = /*#__PURE__*/function () {
+  /**
+   * Initialize
+   */
+  function QueryPath(xml) {
+    _classCallCheck(this, QueryPath);
+
+    typeof xml == 'string' ? this.fromString(xml) : this.fromObject(xml);
+  }
+
+  _createClass(QueryPath, [{
+    key: "document",
+    value: function document() {
+      // return this.dom;
+      return this.dom.window.document;
     }
+  }, {
+    key: "body",
+    value: function body() {
+      // return this.dom;
+      return this.dom.window.document.body;
+    }
+    /**
+     * Create tag with attributes
+     */
 
-    _createClass(QueryPath, [{
-        key: 'document',
-        value: function document() {
-            // return this.dom;
-            return this.dom.window.document;
-        }
-    }, {
-        key: 'body',
-        value: function body() {
-            // return this.dom;
-            return this.dom.window.document.body;
-        }
+  }, {
+    key: "createWith",
+    value: function createWith(tag, attributes) {
+      var element = this.document().createElement(tag);
 
-        /**
-         * Create tag with attributes
-         */
+      for (var i = 0, l = (attributes || []).length; i < l; i++) {
+        var key = attributes.item(i).name;
+        var value = attributes.item(i).nodeValue;
+        element.setAttribute(key, value);
+      }
 
-    }, {
-        key: 'createWith',
-        value: function createWith(tag, attributes) {
-            var element = this.document().createElement(tag);
+      return element;
+    }
+    /**
+     * Alias for query
+     */
 
-            for (var i = 0, l = (attributes || []).length; i < l; i++) {
-                var key = attributes.item(i).name;
-                var value = attributes.item(i).nodeValue;
+  }, {
+    key: "find",
+    value: function find(query) {
+      return this.document().querySelector(query);
+    }
+    /**
+     *
+     */
 
-                element.setAttribute(key, value);
-            }
+  }, {
+    key: "findAll",
+    value: function findAll(query) {
+      return this.document().querySelectorAll(query);
+    }
+    /**
+     * Return as HTML
+     */
 
-            return element;
-        }
+  }, {
+    key: "html",
+    value: function html() {
+      return this.toString();
+    }
+    /**
+     * Remove element from DOM, keep children
+     */
 
-        /**
-         * Alias for query
-         */
+  }, {
+    key: "unwrap",
+    value: function unwrap(wrapper) {
+      var docFrag = this.document().createDocumentFragment();
 
-    }, {
-        key: 'find',
-        value: function find(query) {
-            return this.document().querySelector(query);
-        }
+      while (wrapper.firstChild) {
+        var child = wrapper.removeChild(wrapper.firstChild);
+        docFrag.appendChild(child);
+      } // replace wrapper with document fragment
 
-        /**
-         *
-         */
 
-    }, {
-        key: 'findAll',
-        value: function findAll(query) {
-            return this.document().querySelectorAll(query);
-        }
+      wrapper.parentNode.replaceChild(docFrag, wrapper);
+    }
+    /**
+     * Set JSON from string
+     */
 
-        /**
-         * Return as HTML
-         */
+  }, {
+    key: "fromString",
+    value: function fromString(xml) {
+      // const element = document.createElement('div');
+      // element.innerHTML = xml;
+      // return this.dom = element;
+      return this.dom = new _jsdom["default"].JSDOM(xml);
+    }
+    /**
+     * Convert JSON object to XML
+     */
 
-    }, {
-        key: 'html',
-        value: function html() {
-            return this.toString();
-        }
+  }, {
+    key: "toString",
+    value: function toString() {
+      return this.body().innerHTML;
+    }
+  }]);
 
-        /**
-         * Remove element from DOM, keep children
-         */
-
-    }, {
-        key: 'unwrap',
-        value: function unwrap(wrapper) {
-            var docFrag = this.document().createDocumentFragment();
-
-            while (wrapper.firstChild) {
-                var child = wrapper.removeChild(wrapper.firstChild);
-                docFrag.appendChild(child);
-            }
-
-            // replace wrapper with document fragment
-            wrapper.parentNode.replaceChild(docFrag, wrapper);
-        }
-
-        /**
-         * Set JSON from string
-         */
-
-    }, {
-        key: 'fromString',
-        value: function fromString(xml) {
-            // const element = document.createElement('div');
-            // element.innerHTML = xml;
-            // return this.dom = element;
-
-            return this.dom = new _jsdom2.default.JSDOM(xml);
-        }
-
-        /**
-         * Convert JSON object to XML
-         */
-
-    }, {
-        key: 'toString',
-        value: function toString() {
-            return this.body().innerHTML;
-        }
-    }]);
-
-    return QueryPath;
+  return QueryPath;
 }();
 
-exports.default = QueryPath;
+exports["default"] = QueryPath;
