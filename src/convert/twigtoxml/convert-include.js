@@ -58,10 +58,12 @@ export default class ConvertInclude
     {
         let $a, $attributes, $b, $bob,
             $component, $filepath, $jsonStr,
-            $matches, $parts, $with, $value;
+            $matches, $parts, $url, $with, $value;
+        
+        $url = $attributeValue.match(/["\']([^"\']+)/)[1];
 
         // Take the latter half of the concatenation to simplify the regex
-        $a = $attributeValue.indexOf(' ~ ') > 1
+        $a = $url.indexOf(' ~ ') > 1
             ? $attributeValue.substr($attributeValue.indexOf(' ~ ') + 3)
             : $attributeValue;
 
